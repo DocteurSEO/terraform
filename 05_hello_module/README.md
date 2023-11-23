@@ -1,31 +1,35 @@
-# 🚀 Projet WordPress avec AWS Terraform Module 🌐
+# 🚧 Projet Terraform - Reprise par le Nouveau Stagiaire
 
-## 📖 Introduction
-Ce projet vise à déployer un site WordPress en utilisant un module Terraform pour AWS. Un module Terraform est un ensemble de configurations Terraform utilisées pour encapsuler des blocs de code réutilisables, simplifiant ainsi la gestion des infrastructures.
+## 📢 Annonce
+Votre stagiaire nous a lâché en plein projet de terraformisation de notre structure. 
 
-## 🎯 Objectifs
-- Utiliser un module AWS Terraform pour déployer WordPress.
-- Comprendre le fonctionnement des modules Terraform, leurs inputs et outputs.
-- Réussir le déploiement sur AWS.
+## 🎯 Objectif
+Tu dois reprendre le projet. L'objectif est de créer des modules et de corriger les fautes si besoin.
 
-## 🧩 Qu'est-ce qu'un Module Terraform?
-Un module Terraform est un conteneur pour plusieurs ressources qui sont utilisées ensemble. Chaque module peut être réutilisé et paramétré, ce qui permet une gestion plus efficace et modulaire de l'infrastructure.
 
-## ⚙️ Inputs et Outputs
-- **Inputs**: Les inputs d'un module sont les paramètres que vous pouvez passer au module pour personnaliser son comportement.
-- **Outputs**: Les outputs d'un module sont des valeurs exposées en sortie du module. Ils peuvent être utilisés pour transférer des informations importantes, comme une adresse IP publique ou des identifiants de ressource.
+## 📋 Étapes
 
-## 🛠️ Étapes de Déploiement
-1. **Configuration de l'Environnement** : Assurez-vous que Terraform est installé et configuré pour interagir avec AWS.
-2. **Téléchargement du Module** : Utilisez un module Terraform pour AWS spécifique à WordPress.
-3. **Personnalisation des Inputs** : Adaptez les inputs du module selon les besoins de votre déploiement.
-4. **Exécution du Module** : Lancez le module Terraform pour démarrer le déploiement.
-5. **Vérification** : Une fois le déploiement terminé, vérifiez le site WordPress sur l'adresse fournie.
+### 1. Créer un Module VPC
 
-## 📚 Documentation Complémentaire
-- [Documentation Terraform](https://www.terraform.io/docs)
-- [Guide AWS](https://aws.amazon.com/documentation/)
-- [WordPress sur AWS](https://aws.amazon.com/wordpress/)
+- Créer un module Terraform pour définir un VPC.
+- Inclure des sous-réseaux, une passerelle Internet, et des groupes de sécurité.
 
-## 🎉 Conclusion
-Ce projet vous permettra de comprendre en profondeur le fonctionnement de Terraform et de ses modules, ainsi que les spécificités du déploiement d'applications sur AWS.
+### 2. Créer un Module EC2
+
+- Développer un module pour déployer une instance EC2.
+- L'instance doit être connectée au VPC créé précédemment.
+
+### 3. Assemblage dans le Fichier Principal
+
+- Utiliser les modules VPC et EC2 dans le fichier principal Terraform pour déployer l'infrastructure.
+
+### 4. Variables et Outputs
+
+- Définir des variables appropriées pour les modules.
+- Configurer des outputs pour afficher des informations pertinentes après le déploiement.
+
+## 📚 Tâches 
+
+- Écrire les modules VPC et EC2.
+- Assembler l'infrastructure dans le fichier principal Terraform.
+- Appliquer la configuration et vérifier que l'infrastructure fonctionne comme prévu.
