@@ -1,33 +1,30 @@
+# 🌍 Initiation à Terraform - Exercices Pratiques
+
+## 📝 Introduction
+Ce dépôt GitHub contient différents exercices pratiques pour s'initier à Terraform. L'objectif est d'apprendre par l'erreur et de documenter chaque étape du processus.
+
+## 📚 Documentation des Exercices
+Pour chaque exercice, une documentation doit être fournie,  :
+- Les étapes suivies pour le déploiement.
+- Les sites web consultés et les mots-clés recherchés.
+- Les erreurs rencontrées et les solutions apportées.
+- Des notes personnelles sur l'apprentissage et les difficultés.
+
+## 🛠️ Consignes pour les Contributions
+- **Nom et Prénom** : Incluez votre nom et prénom dans le README de votre dossier d'exercice.
+- **Structure des Dossiers** : Suivez la même structure de notation pour chaque exercice afin de faciliter la compréhension et le suivi.
+- **Documentation** : Assurez-vous que chaque exercice contient un fichier `README.md` détaillant votre processus de travail.
+- **Partage d'Expérience** : N'oubliez pas d'ajouter vos retours personnels et ce que vous avez appris de chaque exercice.
+
+## 🤔 Besoin d'Aide?
+Si vous avez des questions ou avez besoin de clarifications, n'hésitez pas à me contacter.
+
+## 🎯 Objectif du Projet
+- Apprendre de nos erreurs.
+- Documenter méthodiquement nos démarches.
+- Créer un guide de référence pour des projets futurs.
+
+## 🙏 Remerciements
+Merci de prendre part à ce projet éducatif et de contribuer à cette base de connaissances collective.
+
  
-## Objectif 🎯
-
-L'objectif de ce projet est de déployer et de faire fonctionner l'infrastructure Terraform sur AWS. Nous avons rencontré quelques problèmes suite à des erreurs commises par le stagiaire. Votre mission est de corriger ces erreurs et de mener à bien le déploiement de l'infrastructure.
-
-## Documentation 📚
-
-La documentation est essentielle pour comprendre et maintenir le projet. Veuillez vous assurer que toutes les étapes et configurations sont clairement documentées.
-
-## Instructions 🛠️
-
-1. **Analysez le Code** : Examinez le code Terraform existant pour identifier les erreurs.
-2. **Correction des Erreurs** : Apportez les modifications nécessaires pour corriger les erreurs.
-3. **Déploiement sur AWS** : Une fois les erreurs corrigées, déployez l'infrastructure sur AWS.
-4. **Test et Vérification** : Assurez-vous que l'infrastructure fonctionne comme prévu.
-5. **Documentation** : Faire la documentation avec les changements effectués et les procédures de déploiement.
-
-## Ressources Utiles 📌
-
-- Documentation Terraform : [Terraform Docs](https://www.terraform.io/docs)
-- Guide AWS : [AWS Documentation](https://docs.aws.amazon.com)
-
-## Support 💬
-
-En cas de difficultés, n'hésitez pas à demander de l'aide à google
-
----
-
-*P.S.: Rappelez-vous, l'attitude "je n'y arrive pas" n'a pas sa place ici. Vous êtes en M2, et nous avons confiance en vos capacités ! 💪*
-
- 
-
-
