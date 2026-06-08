@@ -1,0 +1,7 @@
+# Copie ce fichier en `terraform.tfvars` (ignoré par git) et renseigne TES valeurs.
+# (les noms ci-dessous reprennent ceux déclarés dans main.tf ; si tu corriges
+#  des noms de variables, pense à adapter les clés ici aussi)
+
+location       = "# TODO"
+rg-name        = "# TODO"
+admin_username = "# TODO"
