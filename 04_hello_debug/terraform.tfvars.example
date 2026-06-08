@@ -1,0 +1,10 @@
+# Copie ce fichier en `terraform.tfvars` (ignoré par git) et renseigne TES valeurs.
+# Les valeurs ne sont volontairement pas données : à toi de choisir des plages
+# cohérentes et une région/AZ valides.
+
+# (les noms ci-dessous reprennent ceux déclarés dans main.tf ; si tu corriges
+#  des noms de variables, pense à adapter les clés ici aussi)
+region            = "# TODO"
+vpc-cidr          = "# TODO"
+subnet-cidr       = "# TODO"
+availability_zone = "# TODO"

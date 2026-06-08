@@ -1,46 +1,48 @@
-# 🚀 Atelier Terraform avec Vultr et Docker
+# 🚀 07 — Une VM Vultr qui lance une app Docker, sans SSH
 
-## Introduction 🌟
+> **Format :** consigne à partir de zéro.
 
-Bienvenue dans notre atelier ! Ce projet vous enseignera comment utiliser Terraform pour créer et gérer des ressources sur Vultr, en particulier une machine virtuelle (VM). Vous apprendrez à installer Docker sur cette VM et lancer une application Docker accessible sur le port 80, le tout sans utiliser SSH mais en automatisant avec Terraform.
+## 🎯 Objectif (résultat observable)
+Provisionner une **VM Vultr** avec Terraform, y faire tourner le conteneur **`satzisa/html5-speedtest`** exposé sur le **port 80**, **sans jamais te connecter en SSH** : tout le provisioning se fait **au démarrage** de la VM.
 
-## Objectifs 🎯
+**Réussite =** un seul `terraform apply`, puis en ouvrant `http://<IP_publique>` dans un navigateur, la page html5-speedtest s'affiche.
 
-- Créer et gérer une VM sur Vultr entièrement via Terraform.
-- Installer Docker sur la VM via des scripts Terraform ( il existe une autre solution )
-- Lancer l'image docker  satzisa/html5-speedtest
+## ✅ Prérequis
+- Terraform ≥ 1.6, Git.
+- Un **compte Vultr** + une **clé API**.
+- 💰 **Coût :** une VM Vultr est **facturée** → `terraform destroy` dès la validation. _(Pas de compte Vultr ? Tu peux adapter l'exercice à un autre fournisseur, voire au provider Docker local.)_
 
-## Prérequis 📚
+## 🔒 Sécurité
+- La **clé API Vultr ne doit jamais** être en clair dans un fichier versionné : passe-la par **variable d'environnement** (`VULTR_API_KEY`) ou un `*.tfvars` ignoré. Documente ton choix.
+- N'expose **que** le port nécessaire au service web ; justifie tes règles de pare-feu.
 
-- Connaissances de base en gestion de serveurs et en réseaux.
-- Compte Vultr (ou un autre fournisseur de cloud si nécessaire).
-- Terraform et Git installés sur votre machine.
+## 🧭 Deux approches possibles pour avoir Docker sur la VM
+1. **L'installer au démarrage** (script d'init / cloud-init), ou
+2. **Partir d'une image système qui l'inclut déjà** (marketplace).
 
-## Étape 1: Configuration de Terraform avec Vultr 🌐
+👉 **Choisis-en une et explique ton choix.** (Rappel : `satzisa/html5-speedtest` est une **image publique du Docker Hub** — il s'agit de la *récupérer et l'exécuter*, pas de cloner un dépôt Git ni de construire une image.)
 
-1. Installez Terraform si ce n'est pas déjà fait.
-2. Configurez Terraform avec votre fournisseur de cloud (Vultr).
-3. Écrivez un script Terraform pour déployer une VM sur Vultr en spécifiant taille, région, et système d'exploitation.
+## 🛠️ Tâches
+1. Configure Terraform pour Vultr (provider + **contrainte de version**, cherche la `source` sur le Registry).
+2. Déploie **une VM** (plan, région, OS — récupère des identifiants **valides** dans la doc Vultr actuelle, ne recopie pas des valeurs d'un autre exercice).
+3. Fais en sorte que Docker récupère et lance l'image sur le **port 80**, **automatiquement au boot**.
+4. Expose l'**IP publique** en `output`.
 
-## Étape 2: Installation de Docker sur la VM via Terraform 🐳
+## 🏁 Critères de réussite (Definition of Done)
+- [ ] `terraform fmt` / `validate` / `apply` passent.
+- [ ] `terraform output` affiche l'IP publique.
+- [ ] `curl http://<ip>` renvoie **HTTP 200** ; la page s'affiche dans un navigateur.
+- [ ] **Aucune** connexion SSH manuelle n'a été nécessaire.
+- [ ] Clé API non commitée ; état non commité ; `terraform destroy` en fin.
 
-1. Utilisez Terraform pour exécuter des scripts d'installation de Docker sur la VM.
-2. Assurez-vous que Docker est correctement installé et configuré via Terraform.
+## 🪤 Pièges connus
+- Identifiants Vultr (plan/région/OS/image) périmés ou inexistants.
+- Service Docker pas encore prêt quand le `run` se lance.
+- Port 80 non ouvert côté pare-feu.
 
-## Étape 3: Clonage du dépôt et Lancement de l'Application Docker via Terraform 🚢
+## 📚 Documentation
+- Provider Vultr (Registry) : <https://registry.terraform.io/providers/vultr/vultr/latest/docs>
+- Docker Hub — html5-speedtest : <https://hub.docker.com/r/satzisa/html5-speedtest>
 
-
-1. Configurez Terraform pour construire et lancer le conteneur Docker, en s'assurant qu'il écoute sur le port 80.
-2. Assurez-vous que le site web est accessible via l'adresse IP de la VM.
-
-## Accès au Site Web 🌍
-
-- Le site web est accessible en saisissant l'adresse IP de votre VM dans un navigateur web.
-
-## Conclusion et Prochaines Étapes 🛣️
-
-Félicitations ! Vous avez utilisé Terraform pour déployer une application web sur Vultr avec Docker. Explorez des configurations plus avancées ou essayez avec d'autres fournisseurs de cloud.
-
----
-
-Bonne chance et amusez-vous bien ! 💻
+## 📝 Livrable
+Documente ta démarche dans ce README — cf. [README racine](../README.md).

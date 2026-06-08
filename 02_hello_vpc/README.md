@@ -1,41 +1,45 @@
+# 🌐 02 — Crée ton premier réseau : un VPC et un subnet
 
+> **Format :** consigne à partir de zéro. `main.tf` ne contient qu'un `// TODO` — à toi d'écrire la configuration.
 
-## 📋 Étapes à Suivre
-1. Définir un VPC dans Terraform.
-2. Définir un subnet dans ce VPC.
-3. Configurer les plages d'adresses IP pour le VPC et le subnet.
-4. Appliquer la configuration avec Terraform pour déployer le VPC et le subnet.
-
-
-
-
-
-
-
-# 🌐 Qu'est-ce qu'un VPC ?
-## 📚 Définition d'un VPC (Virtual Private Cloud)
-Un VPC est une section isolée du cloud AWS où vous pouvez lancer des ressources AWS dans un réseau virtuel que vous définissez. Il offre un contrôle complet sur l'environnement réseau, y compris la sélection de la plage d'adresses IP, la création de sous-réseaux, et la configuration des tables de routage et des passerelles réseau.
-
-## 🌟 Avantages d'un VPC
-- **Sécurité** : Isolation des instances et contrôle des accès.
-- **Personnalisation** : Configuration du réseau selon les besoins spécifiques.
-
-# 🔀 Qu'est-ce qu'un Subnet (Sous-réseau) ?
-## 📚 Définition d'un Subnet
-Un subnet ou sous-réseau est une plage d'adresses IP dans votre VPC. Il permet de segmenter le réseau du VPC en plusieurs réseaux plus petits, ce qui améliore la gestion et la sécurité.
-
-## 💡 Utilisation des Subnets
-- Généralement, les subnets sont utilisés pour séparer les ressources en zones de disponibilité pour la haute disponibilité.
-- Ils peuvent aussi être utilisés pour séparer les environnements (par exemple, production, développement).
-
-# 📌 Plages d'Adresses IP
-## 🧐 Comprendre les Plages d'Adresses IP
-Chaque VPC et subnet a une plage d'adresses IP définie. Les adresses IP sont attribuées aux instances dans le subnet.
-
-## 📝 Exemple de Plage d'Adresses IP
-- Pour un VPC : `10.0.0.0/16` (ce qui représente 65,536 adresses IP possibles).
-- Pour un subnet : `10.0.1.0/24` (ce qui représente 256 adresses IP possibles).
-
-# 🚀 Exercice Pratique
 ## 🎯 Objectif
-Créer un VPC et un subnet dans AWS en utilisant Terraform.
+Créer, avec Terraform, un **VPC** et **un subnet rattaché à ce VPC** sur AWS, et prouver leur création.
+
+À la fin :
+- `terraform apply` crée **exactement 2 ressources** (1 VPC + 1 subnet) ;
+- le subnet **référence l'ID du VPC** (il vit bien *dans* le VPC) ;
+- un **output** expose l'ID du VPC et l'ID du subnet.
+
+## 🧭 Rappels de concepts
+- **VPC (Virtual Private Cloud)** : un réseau virtuel isolé où tu lances tes ressources. Tu contrôles plages d'IP, sous-réseaux, routage.
+- **Subnet** : une sous-plage d'IP du VPC, souvent rattachée à une zone de disponibilité.
+- **Plages CIDR** : un VPC en `/16` ≈ 65 536 adresses, un subnet en `/24` ≈ 256 adresses. Le CIDR du subnet doit être **inclus** dans celui du VPC.
+
+## ✅ Prérequis
+- Terraform ≥ 1.6, compte AWS + CLI configurée (jamais de clés dans le `.tf`).
+- 💰 **Coût :** VPC et subnet sont **gratuits** (attention si tu y ajoutes des ressources facturées plus tard).
+
+## 🛠️ Tâches
+1. Déclare le provider AWS (région imposée) + contraintes de version.
+2. Rends les **CIDR paramétrables** via des **variables** (ne les code pas en dur). Choisis toi-même des plages cohérentes.
+3. Crée le VPC, puis le subnet **rattaché** au VPC.
+4. Expose les IDs en `output`.
+
+## 🏁 Critères de réussite (Definition of Done)
+- [ ] `terraform fmt` et `terraform validate` passent.
+- [ ] `terraform plan` annonce **2 ressources**.
+- [ ] Le subnet utilise bien `vpc_id = <id du VPC créé>`.
+- [ ] `terraform output` affiche les deux IDs.
+- [ ] Aucun `*.tfstate`/`*.tfvars` commité ; `terraform destroy` en fin.
+
+## 🪤 Pièges connus
+- CIDR du subnet hors du CIDR du VPC.
+- Subnet non rattaché au VPC (oubli du `vpc_id`).
+- Zone de disponibilité inexistante dans ta région.
+
+## 📚 Documentation
+- `aws_vpc` : <https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc>
+- `aws_subnet` : <https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet>
+
+## 📝 Livrable
+Documente ta démarche dans ce README — cf. [README racine](../README.md).

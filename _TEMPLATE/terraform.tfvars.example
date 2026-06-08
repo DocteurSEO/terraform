@@ -1,0 +1,11 @@
+# Modèle de fichier de variables.
+#
+# 1. Copie ce fichier en `terraform.tfvars` (qui, lui, est ignoré par git).
+# 2. Renseigne tes valeurs.
+# 3. Ne mets JAMAIS de secret/clé/token ici si le fichier risque d'être commité ;
+#    préfère une variable d'environnement (TF_VAR_xxx, AWS_PROFILE, VULTR_API_KEY…).
+#
+# Exemple de structure (à adapter selon les variables de l'exercice) :
+#
+# region        = "# TODO"
+# instance_type = "# TODO"

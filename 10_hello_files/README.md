@@ -1,75 +1,52 @@
-# Objectif : exécuter un fichier Python, peu importe le provider 🎯🐍🔍
+# 📁 10 — Faire tourner `app.py` à distance avec les provisionneurs
 
+> **Format :** consigne à partir de zéro (le fichier `app.py` t'est fourni).
 
+> ⚠️ **À savoir avant de commencer :** HashiCorp considère les provisionneurs comme un **« dernier recours »** (l'approche moderne privilégie `user_data`/cloud-init, une image pré-construite, ou un outil de gestion de configuration). Cet exercice sert à **comprendre** les provisionneurs — pas à en faire ta méthode de déploiement par défaut. Avant d'utiliser `remote-exec`, cite au moins **une alternative**.
 
+---
 
-## Provisionneur file : 📁
-Le provisionneur file est utilisé pour copier des fichiers ou des répertoires de la machine locale vers une machine distante. C'est utile pour déployer des fichiers de configuration, des scripts ou d'autres ressources sur une instance provisionnée.
+## 📖 PARTIE COURS — les 3 provisionneurs (référence)
+- **`file`** : copie un fichier/dossier de ta machine locale vers une machine distante (via une connexion SSH/WinRM).
+- **`remote-exec`** : exécute des commandes **sur la machine distante** (SSH/WinRM) — utile pour installer/configurer.
+- **`local-exec`** : exécute une commande **sur ta machine locale** (là où tourne Terraform).
 
+📚 Syntaxe exacte et arguments : <https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax>
+(blocs `connection`, `file`, `remote-exec`, `local-exec`).
 
-Exemple :
-```hcl
-resource "aws_instance" "example" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-}
+---
 
-provisioner "file" {
-  source      = "local/path/to/localfile.txt"
-  destination = "/path/on/remote/instance/file.txt"
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
-  }
-}
-```
+## 🎯 PARTIE MISSION — objectif (résultat observable)
+Déployer une instance, y **faire tourner l'application Flask fournie** (`app.py`) et la rendre **accessible sur le port 80**.
 
+**Réussite =** après `terraform apply`, `curl http://<ip_publique>/` renvoie exactement `Hello, Terraform!`.
 
-Dans cet exemple, le provisionneur file copie le localfile.txt de la machine locale vers l'emplacement /path/on/remote/instance/file.txt sur l'instance EC2 AWS en utilisant une connexion SSH.
+> ℹ️ `app.py` est un **serveur web Flask persistant** (il ne se termine pas) : réfléchis à comment le **démarrer en arrière-plan** pour qu'il survive à la fin de l'`apply` (et ne bloque pas le provisionneur).
 
+## ✅ Prérequis
+- Terraform ≥ 1.6, un compte de provider cloud + CLI configurée, une **paire de clés SSH** existante, **Python/Flask** à installer côté hôte.
+- 💰 **Coût :** instance facturée → free tier + `terraform destroy` à la fin.
 
-## Provisionneur remote-exec : 🌐
-Le provisionneur remote-exec est utilisé pour exécuter des scripts ou des commandes sur une machine distante via des connexions SSH ou WinRM. Il est souvent utilisé pour configurer ou installer des logiciels sur des instances provisionnées.
+## 🔒 Sécurité
+- Gère ta clé privée SSH proprement (ne la commite pas).
+- L'app écoute sur le port 80 : ouvre ce port **au strict nécessaire** et justifie.
 
-Exemple :
-```hcl
+## 🛠️ Tâches (sans te donner le code)
+1. Définis le provider/région, le type d'instance, une **AMI résolue dynamiquement** (pas d'ID figé), la clé SSH, le security group — + **contraintes de version**.
+2. Utilise **au minimum `file`** (copier `app.py` sur l'hôte) **et `remote-exec`** (installer les dépendances Python et démarrer l'app). Explique pourquoi `local-exec` ne convient pas pour *héberger* l'app.
+3. Expose l'**IP publique** en `output`.
 
-resource "aws_instance" "example" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-}
+## 🏁 Critères de réussite (Definition of Done)
+- [ ] `terraform fmt` / `validate` / `apply` passent.
+- [ ] `curl http://<ip>/` renvoie `Hello, Terraform!`.
+- [ ] L'app reste joignable **après** la fin de l'`apply`.
+- [ ] Tu as cité une alternative moderne aux provisionneurs.
+- [ ] Aucun secret/état commité ; `terraform destroy` en fin.
 
-provisioner "remote-exec" {
-  inline = [
-    "sudo yum update -y",
-    "sudo yum install -y httpd",
-    "sudo systemctl start httpd",
-  ]
+## 🪤 Pièges connus
+- Provisionneur qui se bloque (app lancée en avant-plan).
+- Utilisateur SSH incohérent avec l'OS de l'AMI.
+- Provisionneurs **non idempotents** : que se passe-t-il au second `apply` ?
 
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
-    host        = aws_instance.example.public_ip
-  }
-}```
-
-Dans cet exemple, le provisionneur remote-exec se connecte à l'instance EC2 AWS en utilisant SSH et exécute une série de commandes pour mettre à jour les dépôts de paquets, installer le serveur HTTP Apache et démarrer le serveur HTTP.
-
-## provisionneur local-exec : 💻
-Le provisionneur local-exec est utilisé pour exécuter des scripts ou des commandes localement sur la machine où Terraform est exécuté. Il est utile pour des tâches qui ne nécessitent pas d'exécution à distance, comme l'initialisation d'une base de données locale ou la configuration de ressources locales.
-Exemple :
-```hcl
-
-resource "null_resource" "example" {
-  triggers = {
-    always_run = "${timestamp()}"
-  }
-
-  provisioner "local-exec" {
-    command = "echo 'Ceci est une commande locale'"
-  }
-}
-```
-Dans cet exemple, une null_resource est utilisée avec un provisionneur local-exec pour exécuter une commande locale simple qui affiche un message dans la console chaque fois que Terraform est appliqué ou actualisé. La fonction timestamp() garantit son exécution à chaque fois.
+## 📝 Livrable
+Documente ta démarche dans ce README — cf. [README racine](../README.md).

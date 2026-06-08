@@ -1,42 +1,45 @@
-# 🌍 Terraform Vultr Instances with Python CLI 🐍
+# 🌍 09 — N instances Vultr pilotées par une CLI Python 🐍
 
-## Introduction 📖
+> **Format :** consigne à partir de zéro. **Prérequis : exercice 07.**
 
-Ce projet vous guide dans la création de plusieurs instances Ubuntu sur Vultr en utilisant Terraform. De plus, vous apprendrez à intégrer une CLI Python pour personnaliser le nombre d'instances.
+## 🎯 Objectif (résultat observable)
+Déployer un **nombre variable** d'instances Ubuntu sur Vultr, ce nombre étant piloté par une **CLI Python** qui met à jour les variables Terraform.
 
-## Prérequis 🧰
+**Réussite =** après `python cli.py 3` puis `terraform apply`, **exactement 3 instances** existent et leurs **3 IPs** apparaissent en sortie Terraform.
 
-- Terraform
-- Compte Vultr avec clé API
-- Python 3
+## ✅ Prérequis
+- Terraform ≥ 1.6, **Python 3**, compte Vultr + clé API.
+- 💰 **Coût :** N instances facturées → garde N petit et **`terraform destroy`** à la fin.
 
-## Configuration Terraform 🌐
+## 🔒 Sécurité
+- Clé API **jamais en clair** dans un fichier versionné (`VULTR_API_KEY` ou `*.tfvars` ignoré).
+- Le script écrit dans `terraform.tfvars` → assure-toi que ce fichier est **ignoré par git** (c'est le cas via le `.gitignore` racine).
 
-### Initialisation:
+## 📐 Contrat de la CLI (interface, pas le code)
+- **Entrée :** un **entier N positif passé en argument** de ligne de commande : `python cli.py <N>`. _(Pas de saisie interactive — on choisit ce mode pour la reproductibilité.)_
+- **Sortie :** le fichier `terraform.tfvars` mis à jour avec la variable qui pilote le nombre d'instances. Les **autres variables** (plan, région, OS) doivent être **préservées**.
+- Gère le cas d'un argument **absent ou invalide**.
 
-1. Clonez le dépôt et naviguez dans le répertoire.
-2. Exécutez `terraform init` pour initialiser Terraform.
+## 🛠️ Tâches
+1. Écris une config Terraform qui produit un **nombre variable** d'instances, piloté par **une seule variable d'entrée** (à toi de choisir le mécanisme : `count`, `for_each`… et de le justifier).
+2. Déclare les variables (nombre, plan, région, OS) — voir [`terraform.tfvars.example`](terraform.tfvars.example). Récupère des identifiants Vultr **valides** dans la doc actuelle.
+3. Écris `cli.py` selon le contrat ci-dessus.
+4. Expose les **IPs** des N instances en `output`.
 
-### Fichiers Terraform:
+## 🏁 Critères de réussite (Definition of Done)
+- [ ] `terraform fmt` / `validate` passent.
+- [ ] `python cli.py 3` puis `apply` → **3 instances** (`terraform state list`) et **3 IPs** en output.
+- [ ] Relancer `cli.py` avec une autre valeur change le plan en conséquence (`+`/`-` instances).
+- [ ] Clé API/état non commités ; `terraform destroy` en fin.
 
-- `variables.tf`: Définit les variables pour le nombre d'instances, le plan, la région, et l'OS.
-- `main.tf`: Contient la configuration pour déployer les instances Vultr.
+## 🪤 Pièges connus
+- Le script écrase les autres variables du tfvars.
+- Argument manquant non géré.
+- Identifiants Vultr périmés.
 
-### Déploiement:
+## 📚 Documentation
+- Provider Vultr : <https://registry.terraform.io/providers/vultr/vultr/latest/docs>
+- `count` / `for_each` : <https://developer.hashicorp.com/terraform/language/meta-arguments/count>
 
-1. Utilisez `terraform plan` pour vérifier la configuration.
-2. Exécutez `terraform apply` pour déployer les instances.
-
-## Intégration CLI Python 🐍
-
-Nous allons créer une CLI simple en Python pour permettre aux utilisateurs de choisir le nombre d'instances à déployer.
-
-### Création du Script Python:
-
-- Nommez le fichier `cli.py`.
-- Le script demandera à l'utilisateur le nombre d'instances et mettra à jour le fichier `terraform.tfvars`.
-
-### Exécution de la CLI:
-
-- Lancez `python cli.py 2 `  qui va faire deux instances
-
+## 📝 Livrable
+Documente ta démarche dans ce README — cf. [README racine](../README.md).

@@ -1,0 +1,8 @@
+# Copie en `terraform.tfvars` (ignoré par git). Le script cli.py mettra à jour
+# la variable du nombre d'instances ; les autres doivent être préservées.
+# Récupère des identifiants Vultr VALIDES dans la doc actuelle.
+
+instance_count = 1        # piloté par cli.py
+plan           = "# TODO"
+region         = "# TODO"
+os_id          = "# TODO"

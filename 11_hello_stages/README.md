@@ -1,59 +1,46 @@
+# 🌐 11 — Un environnement, trois tailles : les workspaces (dev/stage/prod)
 
-# 🌐 Atelier Terraform AWS EC2 ou autre 🚀
+> **Format :** consigne à partir de zéro. **Prérequis : exercice 05 (modules).**
 
-Bienvenue dans cet atelier Terraform où nous apprendrons à configurer et déployer une instance EC2 sur AWS en utilisant Terraform. 🌟
+## 🎯 Objectif (résultat observable)
+Déployer **une** instance EC2 dont le **type change automatiquement selon le workspace actif** (dev/stage/prod), **sans modifier le code** entre deux environnements.
 
+**Réussite =** dans le workspace `prod`, le `plan` montre un type d'instance « gros » ; dans `dev`, un type « petit » — uniquement en changeant de workspace.
 
-## Objectifs 🎯
+## 🧭 C'est quoi un *workspace* ?
+Un **workspace** Terraform permet de gérer **plusieurs états** à partir du **même code**. La variable spéciale `terraform.workspace` te donne le nom du workspace courant, ce qui permet d'adapter des valeurs (ici, le type d'instance).
 
-Comprendre les bases de Terraform.
-Apprendre à configurer un fournisseur AWS avec Terraform.
-Déployer une instance EC2 avec différentes configurations selon l'environnement (dev, stage, prod).
-Prérequis ✅
+> ⚠️ **Mise en garde (à documenter) :** les workspaces CLI conviennent pour des essais **éphémères**, mais sont **déconseillés** pour séparer de vrais environnements **persistants** (état/backend partagés, contrôle d'accès non séparable, dérive masquée). Pour de la vraie prod, on préfère des répertoires/backends distincts. Considère cet exercice comme une **découverte critique** du mécanisme.
 
-```
-Compte AWS avec les droits nécessaires.
-Terraform installé sur votre machine.
-Connaissances de base en AWS et Terraform.
-```
+## ✅ Prérequis
+- Terraform ≥ 1.6, compte AWS + CLI configurée, + **contraintes de version**.
+- **Prérequis pédagogique :** avoir fait l'exercice 05 (tu vas réécrire un module EC2).
+- 💰 **Coût :** ⚠️ le type d'instance « prod » n'est **pas free tier** → reste en dev/petit type pour tester, et `terraform destroy` **par workspace**.
 
-## Étape 1 : Configuration du Fournisseur AWS 🛠️
+## 🛠️ Tâches
+1. Configure le provider AWS + région.
+2. Déclare une variable pour l'**AMI** (décide comment la fournir : variable + tfvars ; justifie) et une variable décrivant le **type d'instance par environnement**.
+3. Fais en sorte que le type d'instance soit **résolu selon `terraform.workspace`** (avec un repli par défaut).
+4. Écris un **module EC2** (réutilise l'esprit de l'exo 05). Définis-toi **l'arborescence** (ex. `modules/ec2_instance/`) et le **contrat** du module :
+   - **entrées** : au moins une AMI et un type d'instance ;
+   - **sorties** : au moins l'**ID** (et/ou l'**IP**) de l'instance.
+5. **Crée et sélectionne** toi-même les workspaces (`dev`, `stage`, `prod`) et **constate** la différence de type entre eux (commandes de gestion des workspaces).
 
-```
-provider "aws" {
-  region = "us-east-1"
-}
-```
-Dans cette étape, vous allez configurer Terraform pour utiliser le fournisseur AWS et définir la région sur us-east-1.
+## 🏁 Critères de réussite (Definition of Done)
+- [ ] `terraform fmt` / `validate` passent.
+- [ ] Le `plan` dans `prod` montre un type différent du `plan` dans `dev`, sans changer le code.
+- [ ] Le module expose ses outputs ; l'instance est bien créée par le module.
+- [ ] Tu as documenté **les limites** des workspaces pour des environnements persistants.
+- [ ] Aucun secret/état commité ; `terraform destroy` par workspace en fin.
 
-## Étape 2 : Déclaration des Variables 📝
+## 🪤 Pièges connus
+- Oublier de **créer/sélectionner** le workspace (tu restes sur `default`).
+- AMI figée/region-dépendante.
+- Type « prod » coûteux laissé tournant.
 
-```
-variable "ami" {
-  description = "value"
-}
+## 📚 Documentation
+- Workspaces : <https://developer.hashicorp.com/terraform/language/state/workspaces>
+- Modules : <https://developer.hashicorp.com/terraform/language/modules>
 
-variable "instance_type" {
-  description = "value"
-  type = map(string)
-  default = {
-    "dev" = "t2.micro"
-    "stage" = "t2.medium"
-    "prod" = "t2.xlarge"
-  }
-}
-```
-Vous allez déclarer deux variables : ami pour l'AMI de l'instance EC2 et instance_type pour le type d'instance. Le type d'instance varie selon l'environnement.
-
-### Étape 3 : Création du Module EC2 🌐
-
-```
-module "ec2_instance" {
-  source = "./modules/ec2_instance"
-  ami = var.ami
-  instance_type = lookup(var.instance_type, terraform.workspace, "t2.micro")
-}
-````
-
-Ici, vous allez utiliser un module pour créer une instance EC2. Vous passerez les variables ami et instance_type au module.
-
+## 📝 Livrable
+Documente ta démarche dans ce README — cf. [README racine](../README.md).

@@ -1,63 +1,52 @@
+# 🔥 01 — Hé toi, jeune Padawan : publie ta première instance AWS EC2
 
-### 🔥 Hé toi, jeune Padawan, commence par publier ta première instance AWS avec Terraform
+> **Format :** consigne à partir de zéro. `main.tf` contient un `// TODO` — à toi d'écrire la configuration.
 
+## 🎯 Objectif
+Provisionner **une** instance EC2 avec Terraform, puis prouver qu'elle tourne — sans copier de code tout fait.
 
+À la fin :
+- `terraform apply` crée **1 instance**, éligible au **free tier**, dans la région que tu choisis et que tu imposes dans ta config ;
+- l'instance porte un **tag `Name`** (mets ton prénom) ;
+- un **output** expose son **ID** et son **IP publique**.
 
-Mini Cours ^^
-# 🌐 Introduction à Terraform
+## 🧭 Mini-cours : c'est quoi Terraform ?
+- 🛠 Un outil d'**Infrastructure as Code (IaC)** de HashiCorp : tu décris ton infra en code, Terraform la crée pour toi.
+- 🔄 Reproductible, versionnable, multi-cloud (AWS, Azure, GCP…).
+- Trois notions de base :
+  - **Provider** : le plugin qui parle à l'API du cloud (ici AWS).
+  - **Resource** : un élément d'infra à créer (ici une instance EC2).
+  - **State** : le fichier où Terraform mémorise ce qu'il a créé (⚠️ il contient des données sensibles, on ne le commite jamais).
 
-## ❓ Qu'est-ce que Terraform ?
-- 🛠 Un outil d'**Infrastructure as Code (IaC)** développé par HashiCorp.
-- ✨ Permet de définir et de provisionner l'infrastructure cloud à l'aide de code.
+## ✅ Prérequis
+- Terraform ≥ 1.6 — <https://developer.hashicorp.com/terraform/install>.
+- Un **compte AWS** + l'**AWS CLI** configurée (`aws configure` ou un profil). **N'écris jamais tes clés AWS dans le `.tf`.**
+- 💰 **Coût :** une `t2.micro`/`t3.micro` est *free tier*, mais facturée si tu dépasses ou si tu oublies de détruire.
 
-## 🚀 Pourquoi utiliser Terraform ?
-- 🔄 Gestion automatisée et reproductible des infrastructures.
-- ☁️ Prise en charge de multiples fournisseurs de cloud, dont AWS, Azure, Google Cloud, etc.
+## 🛠️ Tâches
+1. Déclare le **provider AWS** et impose une **région**.
+2. Ajoute une **contrainte de version** (Terraform + provider AWS) — voir [`_TEMPLATE/versions.tf`](../_TEMPLATE/versions.tf).
+3. Trouve **toi-même** une **AMI valide pour ta région** (réfléchis : un ID figé périme et dépend de la région — existe-t-il une façon de le résoudre dynamiquement ?).
+4. Déclare la **ressource** instance EC2 (type free tier + tag `Name`).
+5. Expose **ID** et **IP publique** en `output`.
+6. Déroule le cycle : `init` → `fmt` → `validate` → `plan` → `apply`.
 
-## 📚 Concepts de base de Terraform
-- **Providers**: Les plugins qui permettent l'interaction avec les API des fournisseurs de cloud.
-- **Resources**: Les éléments d'infrastructure à créer (par exemple, instances, réseaux, etc.).
-- **State**: Le fichier qui enregistre l'état actuel de l'infrastructure.
+## 🏁 Critères de réussite (Definition of Done)
+- [ ] `terraform fmt` et `terraform validate` passent.
+- [ ] `terraform plan` annonce **1 ressource** à créer.
+- [ ] Après `apply`, l'instance est **`running`** dans la console EC2.
+- [ ] `terraform output` affiche l'ID et l'IP publique.
+- [ ] Aucune clé AWS ni `*.tfstate` n'est commité.
+- [ ] `terraform destroy` exécuté en fin d'exercice.
 
-## 📦 Installation de Terraform
-- Guide étape par étape pour installer Terraform sur différentes plateformes (Windows, MacOS, Linux).
+## 🪤 Pièges connus
+- AMI inexistante / d'une autre région → `InvalidAMIID.NotFound`.
+- Région du provider ≠ région de l'AMI.
+- Credentials AWS non configurés.
 
-## 🏗 Exemple Pratique : Déployer une Instance AWS
+## 📚 Documentation
+- Provider AWS : <https://registry.terraform.io/providers/hashicorp/aws/latest/docs>
+- `aws_instance` : <https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance>
 
-### 🛠 Configuration initiale
-- Installation de l'AWS CLI et configuration des credentials AWS.
-- Création d'un répertoire pour votre projet Terraform.
-
-### 📝 Écriture du code Terraform
-- Création d'un fichier principal, généralement nommé `main.tf`.
-- Configuration du provider AWS :
-  ```hcl
-  provider "aws" {
-    region = "us-west-2"
-  }
-
-
-Définir une instance EC2
-Ajout de la ressource d'instance EC2 dans main.tf :
- ``` 
-
-resource "aws_instance" "example" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-}
-
- ```
-
-### 🚀 Initialisation et déploiement
-
-Exécution de  ```terraform init ``` pour initialiser le répertoire.
-
-Exécution de  ```terraform plan ``` pour voir un aperçu des changements.
-
-Exécution de  ```terraform apply ``` pour créer l'infrastructure.
-
-### 🧹 Nettoyage
-Utilisation de  ```terraform destroy ```pour supprimer l'infrastructure lorsque vous avez terminé.
-
-
-
+## 📝 Livrable
+Documente ta démarche (étapes, erreurs, mots-clés cherchés) dans ce README — cf. [README racine](../README.md).

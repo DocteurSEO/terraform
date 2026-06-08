@@ -1,1 +1,45 @@
+# ───────────────────────────────────────────────────────────────
+# Terraform — ne JAMAIS versionner l'état ni les secrets
+# ───────────────────────────────────────────────────────────────
+
+# Répertoires .terraform (cache des providers/modules)
+**/.terraform/*
+
+# Fichiers d'état (contiennent les valeurs sensibles en clair après apply)
+*.tfstate
+*.tfstate.*
+terraform.tfstate.d/
+
+# Fichiers de plan binaires
+*.tfplan
+
+# Fichiers de variables (susceptibles de contenir des secrets)
+*.tfvars
+*.tfvars.json
+# … mais on garde les exemples, qui ne contiennent pas de secret :
+!*.tfvars.example
+
+# Fichiers d'override
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Configuration CLI Terraform
+.terraformrc
+terraform.rc
+
+# Logs de crash
+crash.log
+crash.*.log
+
+# Clés privées et variables d'environnement
+*.pem
+*.key
+.env
+
+# NB : on VERSIONNE volontairement .terraform.lock.hcl (reproductibilité des
+# versions de providers entre machines) — il n'est donc pas ignoré ici.
+
+# Entrée historique du dépôt
 local_response

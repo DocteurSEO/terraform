@@ -1,0 +1,43 @@
+name: Lint Terraform
+
+# CI de l'AUTEUR du dépôt : garde-fou contre les régressions de formatage du
+# support pédagogique. Ne valide PAS la logique des exercices (ils sont
+# volontairement incomplets) — vérifie seulement `terraform fmt`.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  fmt:
+    name: terraform fmt -check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~> 1.6"
+
+      - name: Vérifier le formatage (hors exercices de debug volontairement imparfaits)
+        run: |
+          set -e
+          # 04_hello_debug et 05_hello_module sont des exercices de DEBUG :
+          # leur état de départ est volontairement imparfait (erreur de syntaxe,
+          # formatage « du stagiaire »). On les exclut donc du check de l'auteur.
+          SKIP_DIRS="04_hello_debug 05_hello_module"
+          fail=0
+          dirs=$(find . -name '*.tf' -not -path './.git/*' -exec dirname {} \; | sort -u)
+          for dir in $dirs; do
+            skip=0
+            for s in $SKIP_DIRS; do
+              case "$dir" in *"$s"*) skip=1 ;; esac
+            done
+            if [ "$skip" = 1 ]; then
+              echo "::notice:: skip $dir (exercice de debug volontairement imparfait)"
+              continue
+            fi
+            echo "== fmt check: $dir"
+            terraform -chdir="$dir" fmt -check -diff || fail=1
+          done
+          exit $fail

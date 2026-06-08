@@ -1,33 +1,29 @@
+# Infra VOLONTAIREMENT triviale et GRATUITE (aucun compte cloud, aucun secret
+# réel) : l'enjeu de cet exercice est le WORKFLOW CI/CD, pas l'infrastructure.
+# Examine ce fichier, puis écris la GitHub Action qui l'orchestre (voir README).
 
 terraform {
+  required_version = ">= 1.6.0"
+
   required_providers {
-    vultr = {
-      source = "vultr/vultr"
-      version = "2.17.1"
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
     }
   }
 }
 
-
-provider "vultr" {
-  api_key = "key"
-  rate_limit = 100
-  retry_limit = 3
+variable "environment" {
+  description = "Nom d'environnement. Peut être fourni dans la CI via TF_VAR_environment."
+  type        = string
+  default     = "ci"
 }
 
-resource "vultr_instance" "vm_docker" {
-  plan     = "vc2-1c-1gb"  # Choisissez le plan selon vos besoins
-  region   = "fra"      # Choisissez la région (exemple : Frankfurt)
-  image_id = "docker"         # ID pour une distribution comme Ubuntu
-
-  # Script d'initialisation pour installer Docker et lancer l'image Docker spécifiée
-  user_data = <<-EOF
-              #!/bin/bash
-              docker pull satzisa/html5-speedtest
-              docker run -d -p 80:80 satzisa/html5-speedtest
-              EOF
+resource "random_pet" "demo" {
+  prefix    = var.environment
+  separator = "-"
 }
 
-output "ip_address" {
-  value = vultr_instance.vm_docker.main_ip
+output "demo_name" {
+  value = random_pet.demo.id
 }
